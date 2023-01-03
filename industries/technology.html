@@ -51,6 +51,27 @@
                 document.getElementById('fail').hidden = false
             }
         }
+
+        let IOSsearch = function () {
+            document.getElementById('fail').hidden = true
+            q = document.getElementById('IOSsearchbar').value
+            opportunities = document.getElementsByClassName('opportunity')
+            counter = 0
+
+            for(i = 0; i < opportunities.length; i++){
+                companyName = document.getElementsByClassName('opportunity')[i].childNodes[0].childNodes[0].childNodes[0].childNodes[0].childNodes[1].innerText
+                if(!companyName.toLowerCase().includes(q.toLowerCase())){
+                    document.getElementsByClassName('opportunity')[i].hidden = true
+                } else {
+                    counter += 1
+                    document.getElementsByClassName('opportunity')[i].hidden = false
+                }
+            }
+
+            if (counter == 0){
+                document.getElementById('fail').hidden = false
+            }
+        }
     </script>
 
     <script>
@@ -105,6 +126,10 @@
                 search()
             })
 
+            document.getElementById('IOSsearchbar').addEventListener('input', (event) => {
+                IOSsearch()
+            })
+
             init.then(() => {
                 row = document.getElementById('listing')
 
@@ -121,7 +146,7 @@
                     borderDiv.style = "border-left-color:#A51C30; border-left-width: .3em;"
 
                     cardDiv = document.createElement('div')
-                    cardDiv.className = "card-body"
+                    cardDiv.className = "card-body width-card"
 
                     rowDiv = document.createElement('div')
                     rowDiv.className = "row no-gutters align-items-center"
@@ -219,8 +244,9 @@
                 doNextPromise(0);
             }).then(() => {
                 logos = document.getElementsByClassName('logos')
+                thresh = Math.min(document.getElementsByClassName('width-card')[0].offsetWidth - 30,200)
                 for (i = 0; i < logos.length; i++){
-                    while(logos[i].width > 220){
+                    while(logos[i].width > thresh){
                         logos[i].height -= 2
                     }
                 }
@@ -228,7 +254,7 @@
                 for(let i = 1; i <= 1000; i++){
                     setTimeout(() => {
                         for (i = 0; i < logos.length; i++){
-                            while(logos[i].width > 220){
+                            while(logos[i].width > thresh){
                                 logos[i].height -= 2
                             }
                         }
@@ -345,7 +371,7 @@
 
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
+                        <i class="fa fa-bars" style="color:#A51C30"></i>
                     </button>
 
                     <!-- Topbar Search -->
@@ -373,19 +399,28 @@
                             </a>
                             <!-- Dropdown - Messages -->
                             <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                                aria-labelledby="searchDropdown">
-                                <form class="form-inline mr-auto w-100 navbar-search">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control bg-light border-0 small"
-                                            placeholder="Search for..." aria-label="Search"
-                                            aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button">
-                                                <i class="fas fa-search fa-sm"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
+                                aria-labelledby="searchDropdown" style="position:fixed;top:20px">
+                                <table style='width:100%'>
+                                    <tr>
+                                        <td style="width:5%">
+                                            <button type="button" class="btn btn-light" aria-label="Close">x</button>
+                                        </td>
+                                        <td style="width:3%"></td>
+                                        <td style="width:92%">
+                                            <form class="form-inline mr-auto w-100 navbar-search">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control bg-light border-0 small" placeholder="Search by company..."
+                                                        aria-label="Search" aria-describedby="basic-addon2" id="IOSsearchbar" autocomplete="off">
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-primary" type="submit" style="background-color:#A51C30" onclick="IOSsearch(); return false;">
+                                                            <i class="fas fa-search fa-sm"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </table>
                             </div>
                         </li>
 
